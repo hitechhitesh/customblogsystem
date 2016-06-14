@@ -18,3 +18,6 @@ Route::get('/', function () {
 Route::auth();
 
 Route::get('/home', 'HomeController@index');
+Route::get('/post', ['uses' => 'HomeController@post', 'as' => 'post']);
+Route::get('/contact', ['uses' => 'HomeController@contact', 'as' => 'contact']);
+Route::get('/about', ['uses' => 'HomeController@about', 'as' => 'about']);
