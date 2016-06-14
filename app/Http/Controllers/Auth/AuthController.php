@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use App\User,Auth;
+use Illuminate\Http\Request;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -28,7 +29,7 @@ class AuthController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/';
+    //protected $redirectTo = '/';
 
     /**
      * Create a new authentication controller instance.
@@ -69,4 +70,49 @@ class AuthController extends Controller
             'password' => bcrypt($data['password']),
         ]);
     }
+
+    public function login(Request $request)
+    {
+        $this->validate($request,[
+            'email' => 'required|email', 'password' => 'required',
+        ]);
+
+        $credentials = array(
+            'email' => $request->email,
+            'password' => $request->password,
+            'status' => 1
+        );
+        if (Auth::validate(['email' => $request->email, 'password' => $request->password, 'status' => 0])) {
+            return back()->withErrors(['email' => 'You are not active']);
+        }
+        else if (Auth::attempt($credentials, $request->has('remember')))
+        {
+            if(Auth::user()->user_roles=='admin')
+            {
+                return redirect('/admin');
+            }
+
+            else if(Auth::user()->user_roles=='author')
+            {
+                return redirect('/author');
+            }
+
+            else if(Auth::user()->user_roles=='editor')
+            {
+                return redirect('/editor');
+            }
+            else
+            {
+                return redirect('/user');
+            }
+        }
+
+        else
+        {
+            echo 'i am here';exit;
+            return back()->withErrors(['email' => 'These credentials do not match our records']);
+        }
+    }
+
+
 }

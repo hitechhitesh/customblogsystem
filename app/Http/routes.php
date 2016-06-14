@@ -18,3 +18,15 @@ Route::get('/', function () {
 Route::auth();
 
 Route::get('/home', 'HomeController@index');
+
+
+Route::group(['prefix'=>'admin'],function(){
+
+    Route::resource('/', 'AdminController');
+
+    Route::resource('category', 'CategoryController');
+
+    Route::resource('post', 'PostController');
+
+});
+
