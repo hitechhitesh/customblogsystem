@@ -6,4 +6,7 @@ Homestead.json
 .env
 /storage
 /database
+
 .idea
+
+.idea/
